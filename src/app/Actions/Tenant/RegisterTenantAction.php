@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class RegisterTenantAction
 {
@@ -32,6 +33,9 @@ class RegisterTenantAction
                 'email' => $data->adminEmail,
                 'password' => Hash::make($data->password),
             ]);
+
+            $adminRole = Role::where('name', 'Admin da Loja')->first();
+            $admin->assignRole($adminRole);
 
             $token = $admin->createToken('api-token')->plainTextToken;
 

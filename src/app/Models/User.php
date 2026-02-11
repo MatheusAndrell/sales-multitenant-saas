@@ -6,11 +6,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
-
+    use HasApiTokens, Notifiable, HasRoles; 
+    protected $guard_name = 'web'; 
     protected $fillable = [
         'tenant_id',
         'name',
