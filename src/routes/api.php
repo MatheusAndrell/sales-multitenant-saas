@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SaleController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TenantController;
@@ -48,7 +49,15 @@ Route::middleware(['auth:sanctum', 'permission:manage sales'])->group(function (
         Route::post('/pay/{sale}', [SaleController::class, 'pay']);
         Route::delete('/{sale}/items/{item}', [SaleController::class, 'removeItem']);
         Route::post('/cancel/{sale}', [SaleController::class, 'cancel']);
-
     });
-
 });
+
+// Rotas de Usuários
+Route::middleware(['auth:sanctum'])
+    ->prefix('users')
+    ->group(function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('/store', [UserController::class, 'store']);
+        Route::put('/update/{user}', [UserController::class, 'update']);
+        Route::delete('/delete/{user}', [UserController::class, 'destroy']);
+    });
