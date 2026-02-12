@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SaleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\TenantRegistrationController;
+use App\Http\Controllers\Api\TenantController;
 
 // Rotas de autenticação
 Route::prefix('auth')->group(function () {
@@ -15,7 +15,7 @@ Route::prefix('auth')->group(function () {
 
 // Rotas de tenant
 Route::prefix('tenants')->group(function () {
-    Route::post('/register', [TenantRegistrationController::class, 'register']);
+    Route::post('/register', [TenantController::class, 'register']);
 });
 
 // Rotas de Produtos
@@ -46,6 +46,9 @@ Route::middleware(['auth:sanctum', 'permission:manage sales'])->group(function (
         Route::post('/store', [SaleController::class, 'store']);
         Route::post('/item/{sale}', [SaleController::class, 'addItem']);
         Route::post('/pay/{sale}', [SaleController::class, 'pay']);
+        Route::delete('/{sale}/items/{item}', [SaleController::class, 'removeItem']);
+        Route::post('/cancel/{sale}', [SaleController::class, 'cancel']);
+
     });
 
 });

@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\RegisterTenantRequest;
 use Illuminate\Support\Facades\Log;
 
-class TenantRegistrationController extends Controller
+class TenantController extends Controller
 {
     public function __construct(
         private RegisterTenantAction $action

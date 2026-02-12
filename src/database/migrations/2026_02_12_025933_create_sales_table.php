@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->decimal('total_amount', 12, 2)->default(0);
 
-            $table->enum('status', ['pending', 'paid', 'cancelled'])
+            $table->enum('status', allowed: ['pending', 'paid', 'cancelled'])
                 ->default('pending');
 
             $table->timestamps();

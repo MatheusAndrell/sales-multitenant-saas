@@ -1,39 +1,51 @@
 <?php
+
 namespace App\Actions\Sales;
 
 use App\Models\Sale;
-use App\DTOs\Sales\PaySaleDTO;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
 class PaySaleAction
 {
-  public function execute(PaySaleDTO $dto): Sale
+  public function execute(int $saleId, int $tenantId): Sale
   {
-    return DB::transaction(function () use ($dto) {
+    return DB::transaction(function () use ($saleId, $tenantId) {
 
-      $sale = Sale::where('tenant_id', $dto->tenant_id)
+      $sale = Sale::where('tenant_id', $tenantId)
+        ->where('id', $saleId)
         ->where('status', 'pending')
-        ->with('items.product')
-        ->findOrFail($dto->sale_id);
+        ->with('items')
+        ->lockForUpdate()
+        ->firstOrFail();
+
+      if ($sale->items->isEmpty()) {
+        throw new Exception('Cannot pay a sale without items.');
+      }
 
       foreach ($sale->items as $item) {
 
-        if ($item->product->stock < $item->quantity) {
+        $product = Product::where('tenant_id', $tenantId)
+          ->where('id', $item->product_id)
+          ->lockForUpdate()
+          ->firstOrFail();
+
+        if ($product->stock_quantity < $item->quantity) {
           throw new Exception(
-            "Estoque insuficiente para o produto {$item->product->name}"
+            "Insufficient stock for product {$product->name}"
           );
         }
 
-        $item->product->decrement('stock', $item->quantity);
+        $product->decrement('stock_quantity', $item->quantity);
       }
 
       $sale->update([
         'status' => 'paid',
-        'paid_at' => now()
+        'paid_at' => now(),
       ]);
 
-      return $sale;
+      return $sale->fresh('items');
     });
   }
 }

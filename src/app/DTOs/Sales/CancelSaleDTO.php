@@ -2,11 +2,11 @@
 
 namespace App\DTOs\Sales;
 
-class PaySaleDTO
+class CancelSaleDTO
 {
     public function __construct(
         public int $sale_id,
-        public int $tenant_id,
+        public int $tenant_id
     ) {}
 
     public static function fromArray(array $data): self
