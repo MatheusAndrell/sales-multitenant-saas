@@ -21,7 +21,6 @@ class CnpjRule implements ValidationRule
             return;
         }
 
-        // Validação dos dígitos verificadores
         for ($t = 12; $t < 14; $t++) {
             $sum = 0;
             $pos = $t - 7;

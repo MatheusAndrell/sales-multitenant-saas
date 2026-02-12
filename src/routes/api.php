@@ -7,8 +7,6 @@ use App\Http\Controllers\Api\TenantRegistrationController;
 // Rotas de autenticação
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
-
-    // Logout precisa estar autenticado
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
 
