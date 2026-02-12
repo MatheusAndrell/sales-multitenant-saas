@@ -14,6 +14,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::create(['name' => 'manage clients']);
         Permission::create(['name' => 'manage products']);
+        Permission::create(['name' => 'manage customers']);
         Permission::create(['name' => 'manage sales']);
         Permission::create(['name' => 'view reports']);
 
