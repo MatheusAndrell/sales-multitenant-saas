@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\SaleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TenantRegistrationController;
@@ -28,7 +29,7 @@ Route::middleware(['auth:sanctum', 'permission:manage products'])
     });
 
 // Rotas de Customers
-    Route::middleware(['auth:sanctum', 'permission:manage customers'])
+Route::middleware(['auth:sanctum', 'permission:manage customers'])
     ->prefix('customers')
     ->group(function () {
         Route::get('/', [CustomerController::class, 'index']);
@@ -36,3 +37,15 @@ Route::middleware(['auth:sanctum', 'permission:manage products'])
         Route::put('/update/{customer}', [CustomerController::class, 'update']);
         Route::delete('/delete/{customer}', [CustomerController::class, 'destroy']);
     });
+
+// Rotas de Sales
+Route::middleware(['auth:sanctum', 'permission:manage sales'])->group(function () {
+
+    Route::prefix('sales')->group(function () {
+        Route::get('/', [SaleController::class, 'index']);
+        Route::post('/store', [SaleController::class, 'store']);
+        Route::post('/item/{sale}', [SaleController::class, 'addItem']);
+        Route::post('/pay/{sale}', [SaleController::class, 'pay']);
+    });
+
+});
