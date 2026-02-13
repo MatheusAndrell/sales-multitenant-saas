@@ -7,7 +7,7 @@ const menu = [
   {
     section: 'main',
     items: [
-      { icon: 'mdi:view-dashboard', label: 'Dashboard', to: '/dashboard' },
+      { icon: 'mdi:view-dashboard-outline', label: 'Dashboard', to: '/dashboard' },
       { icon: 'icon-park-outline:city', label: 'Clientes', to: '/customers' },
       { icon: 'mdi:cart-outline', label: 'Produtos', to: '/products' },
       { icon: 'material-symbols:box-outline', label: 'Vendas', to: '/sales' },
@@ -19,7 +19,7 @@ const menu = [
 
 <template>
   <aside class="fixed top-0 left-0 w-64 h-full">
-    <div class="flex flex-col items-center w-64 h-full overflow-hidden text-gray-400 bg-gray-800">
+    <div class="flex flex-col items-center w-64 h-full overflow-hidden text-gray-400 bg-white dark:bg-gray-800">
       <AppLogo />
 
       <div class="w-full px-2 flex-1">
@@ -28,9 +28,9 @@ const menu = [
         </SidebarSection>
       </div>
 
-      <!-- <div class="w-full flex justify-center mb-6 mt-auto">
+      <div class="w-full flex justify-center mb-6 mt-auto">
         <AtThemeToggle />
-      </div> -->
+      </div>
     </div>
   </aside>
 </template>

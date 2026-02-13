@@ -17,7 +17,7 @@ class StoreUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'nullable|string|in:admin,vendedor',
+            'role' => 'nullable|string|in:Admin da Loja,Vendedor',
         ];
     }
 
@@ -33,7 +33,7 @@ class StoreUserRequest extends FormRequest
             'password.required' => 'A senha é obrigatória.',
             'password.min' => 'A senha deve ter no mínimo 8 caracteres.',
             'password.confirmed' => 'A confirmação de senha não corresponde.',
-            'role.in' => 'O role deve ser "admin" ou "vendedor".',
+            'role.in' => 'O role deve ser "Admin da Loja" ou "Vendedor".',
         ];
     }
 }

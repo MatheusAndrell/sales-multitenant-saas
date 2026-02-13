@@ -13,12 +13,12 @@
     <transition name="fade">
       <div
         v-if="isVisible"
-        class="absolute left-0 mt-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-lg p-4 z-50 dark:bg-gray-800"
+        class="absolute left-0 mt-2 w-64 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white text-sm rounded-lg shadow-lg p-4 z-50"
       >
-        <div class="font-semibold mb-3 text-gray-100">Credenciais de Teste:</div>
+        <div class="font-semibold mb-3 text-gray-900 dark:text-white">Credenciais de Teste:</div>
         
         <div class="mb-3">
-          <div class="text-gray-300 font-medium">Admin</div>
+          <div class="text-gray-700 dark:text-gray-300 font-medium">Admin</div>
           <div class="text-gray-400 text-xs mt-1">
             Email: <span class="text-blue-400">admin@admin.com</span>
           </div>
@@ -28,7 +28,7 @@
         </div>
 
         <div>
-          <div class="text-gray-300 font-medium">Vendedor</div>
+          <div class="text-gray-700 dark:text-gray-300 font-medium">Vendedor</div>
           <div class="text-gray-400 text-xs mt-1">
             Email: <span class="text-blue-400">vendedor@vendedor.com</span>
           </div>

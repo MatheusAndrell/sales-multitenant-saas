@@ -36,6 +36,13 @@ class SaleController extends Controller
         return response()->json($this->listAction->execute());
     }
 
+    public function show(Sale $sale)
+    {
+        $sale->load(['items.product', 'customer']);
+
+        return response()->json($sale);
+    }
+
     public function store(StoreSaleRequest $request, CreateSaleAction $action)
     {
         try {
@@ -74,7 +81,7 @@ class SaleController extends Controller
 
             return response()->json([
                 'message' => 'Item adicionado com sucesso.',
-                'data' => $item
+                'data' => $item->load('product')
             ], 201);
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -84,12 +91,13 @@ class SaleController extends Controller
         } catch (\Exception $e) {
             \Log::error('Erro ao adicionar item na venda', [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
                 'sale_id' => $sale,
                 'user_id' => auth()->id()
             ]);
 
             return response()->json([
-                'message' => 'Erro interno ao adicionar item na venda.'
+                'message' => $e->getMessage() ?: 'Erro interno ao adicionar item na venda.'
             ], 500);
         }
     }

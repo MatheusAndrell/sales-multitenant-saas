@@ -1,17 +1,6 @@
-<template>
-  <button
-    @click="toggleTheme"
-    class="flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-300 focus:outline-none"
-    :class="isDark ? 'bg-gray-700 text-yellow-400' : 'bg-yellow-300 text-gray-800'"
-    aria-label="Alternar tema"
-  >
-    <span v-if="isDark" class="iconify" data-icon="mdi:weather-night" data-inline="false"></span>
-    <span v-else class="iconify" data-icon="mdi:white-balance-sunny" data-inline="false"></span>
-  </button>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
+import { Icon } from '@iconify/vue'
 
 const isDark = ref(false)
 
@@ -21,6 +10,7 @@ onMounted(() => {
 
 function toggleTheme() {
   isDark.value = !isDark.value
+
   if (isDark.value) {
     document.documentElement.classList.add('dark')
     localStorage.setItem('theme', 'dark')
@@ -31,12 +21,14 @@ function toggleTheme() {
 }
 </script>
 
-<style scoped>
-.iconify {
-  font-size: 1.5rem;
-  transition: transform 0.3s;
-}
-button:active .iconify {
-  transform: rotate(20deg) scale(1.1);
-}
-</style>
+<template>
+  <button @click="toggleTheme" class="relative w-16 h-8 rounded-full transition-colors duration-500 focus:outline-none"
+    :class="isDark ? 'bg-gray-700' : 'bg-yellow-300'">
+    <div class="absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-md
+             flex items-center justify-center
+             transform transition-transform duration-500 ease-in-out"
+      :class="isDark ? 'translate-x-8' : 'translate-x-0'">
+      <Icon :icon="isDark ? 'mdi:weather-night' : 'mdi:white-balance-sunny'" class="text-lg" />
+    </div>
+  </button>
+</template>

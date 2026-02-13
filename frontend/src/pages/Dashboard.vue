@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+  <div class="min-h-screen bg-blue-100 dark:bg-gray-900 p-6">
     <div class="max-w-7xl mx-auto">
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">

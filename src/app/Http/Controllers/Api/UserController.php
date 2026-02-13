@@ -64,6 +64,17 @@ class UserController extends Controller
         }
     }
 
+    public function show(User $user)
+    {
+        if ($user->tenant_id !== auth()->user()->tenant_id) {
+            return response()->json([
+                'message' => 'Usuário não encontrado ou inacessível para este tenant.'
+            ], 403);
+        }
+
+        return response()->json($user);
+    }
+
     public function update(UpdateUserRequest $request, User $user)
     {
         try {

@@ -4,7 +4,7 @@ import Sidebar from '../organisms/Sidebar.vue'
 
 <template>
   <Sidebar />
-  <div class="sm:ml-64 p-4">
+  <div class="sm:ml-64 ">
     <router-view />
   </div>
 </template>

@@ -27,6 +27,11 @@ class CustomerController extends Controller
         return response()->json($this->listAction->execute());
     }
 
+    public function show(Customer $customer)
+    {
+        return response()->json($customer);
+    }
+
     public function store(StoreCustomerRequest $request)
     {
         try {

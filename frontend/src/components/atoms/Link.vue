@@ -18,7 +18,7 @@ const props = defineProps({
 
 const classes = computed(() => {
   const variantClasses = {
-    primary: 'text-sm font-medium text-primary-600 hover:underline dark:text-primary-500',
+    primary: 'text-sm font-medium text-primary hover:underline dark:text-primary',
     secondary: 'text-sm font-light text-gray-500 hover:underline dark:text-gray-400',
     tertiary: 'text-gray-900 hover:underline dark:text-white'
   }

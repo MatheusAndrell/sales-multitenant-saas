@@ -21,7 +21,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (value) => ['primary', 'secondary', 'tertiary'].includes(value)
+    validator: (value) => ['primary', 'secondary', 'tertiary', 'danger'].includes(value)
   },
   size: {
     type: String,
@@ -34,7 +34,7 @@ const props = defineProps({
 defineEmits(['click'])
 
 const classes = computed(() => {
-  const base = 'font-medium rounded-lg text-center transition-all'
+  const base = 'font-medium rounded-lg text-center transition-all cursor-pointer'
   
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-xs',
@@ -43,9 +43,10 @@ const classes = computed(() => {
   }
 
   const variantClasses = {
-    primary: 'text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800',
-    secondary: 'text-primary-600 hover:text-primary-700 dark:text-primary-500',
-    tertiary: 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+    primary: 'text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary dark:bg-primary dark:hover:bg-blue-800 dark:focus:ring-primary',
+    secondary: 'text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800',
+    tertiary: 'text-gray-500 hover:text-gray-700 dark:text-gray-400',
+    danger: 'text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800'
   }
 
   const disabledClass = 'opacity-50 cursor-not-allowed'

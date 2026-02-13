@@ -15,7 +15,6 @@ const routes = [
     meta: { requiresGuest: true }
   },
 
-  // 🔥 TODAS AS ROTAS COM LAYOUT
   {
     path: '/',
     component: AppLayout,
@@ -27,7 +26,28 @@ const routes = [
       },
       {
         path: 'dashboard',
-        component: () => import('../pages/Dashboard.vue')
+        component: () => import('../pages/Dashboard.vue'),
+        meta: { title: 'Dashboard' }
+      },
+      {
+        path: 'customers',
+        component: () => import('../pages/Customers/Index.vue'),
+        meta: { title: 'Clientes' }
+      },
+      {
+        path: 'products',
+        component: () => import('../pages/Products/Index.vue'),
+        meta: { title: 'Produtos' }
+      },
+      {
+        path: 'sales',
+        component: () => import('../pages/Sales/Index.vue'),
+        meta: { title: 'Vendas' }
+      },
+      {
+        path: 'users',
+        component: () => import('../pages/Users/Index.vue'),
+        meta: { title: 'Usuários' }
       },
     ]
   }
@@ -38,32 +58,25 @@ const router = createRouter({
   routes
 })
 
-// Route Guard - Verifica autenticação
 router.beforeEach((to, from, next) => {
   const { isAuthenticated, checkAuth } = useAuth()
 
-  // Verifica se há token armazenado
   checkAuth()
 
-  // Se a rota requer autenticação
   if (to.meta.requiresAuth) {
     if (isAuthenticated.value) {
       next()
     } else {
-      // Redireciona para login
       next('/login')
     }
   }
-  // Se a rota requer que NÃO esteja autenticado (login, registro, etc)
   else if (to.meta.requiresGuest) {
     if (isAuthenticated.value) {
-      // Se está autenticado, vai para dashboard
       next('/dashboard')
     } else {
       next()
     }
   }
-  // Rotas públicas
   else {
     next()
   }

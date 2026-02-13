@@ -19,7 +19,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $userId,
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'nullable|string|in:admin,vendedor',
+            'role' => 'nullable|string|in:Admin da Loja,Vendedor',
         ];
     }
 
@@ -34,7 +34,7 @@ class UpdateUserRequest extends FormRequest
             'email.unique' => 'Este email já está cadastrado.',
             'password.min' => 'A senha deve ter no mínimo 8 caracteres.',
             'password.confirmed' => 'A confirmação de senha não corresponde.',
-            'role.in' => 'O role deve ser "admin" ou "vendedor".',
+            'role.in' => 'O role deve ser "Admin da Loja" ou "Vendedor".',
         ];
     }
 }

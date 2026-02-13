@@ -14,6 +14,7 @@ class UpdateProductAction
             'description' => $data->description,
             'price' => $data->price,
             'stock_quantity' => $data->stockQuantity,
+            'category' => $data->category,
         ]);
 
         return $product;

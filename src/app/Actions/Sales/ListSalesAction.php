@@ -9,6 +9,6 @@ class ListSalesAction
 {
     public function execute(): LengthAwarePaginator
     {
-        return Sale::with('items')->paginate(10);
+        return Sale::with(['items', 'customer'])->paginate(10);
     }
 }

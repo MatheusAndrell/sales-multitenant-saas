@@ -14,7 +14,7 @@ defineProps({
         S
       </div>
 
-      <span class="text-lg font-semibold text-white tracking-wide">
+      <span class="text-lg font-semibold text-primary dark:text-white tracking-wide">
         Sales Multitenant
       </span>
     </RouterLink>

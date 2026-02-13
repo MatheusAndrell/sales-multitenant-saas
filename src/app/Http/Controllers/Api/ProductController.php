@@ -27,6 +27,11 @@ class ProductController extends Controller
         return response()->json($this->listAction->execute());
     }
 
+    public function show(Product $product)
+    {
+        return response()->json($product);
+    }
+
     public function store(StoreProductRequest $request)
     {
         try {

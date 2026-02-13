@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full h-full bg-gray-50 dark:bg-gray-900">
+  <section class="w-full h-full bg-gray-100 dark:bg-gray-900">
     <div class="flex flex-col items-center justify-center px-6 py-8 w-full h-full">
       <Logo
         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"

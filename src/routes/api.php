@@ -24,6 +24,7 @@ Route::middleware(['auth:sanctum', 'permission:manage products'])
     ->prefix('products')
     ->group(function () {
         Route::get('/', [ProductController::class, 'index']);
+        Route::get('/{product}', [ProductController::class, 'show']);
         Route::post('/store', [ProductController::class, 'store']);
         Route::put('/update/{product}', [ProductController::class, 'update']);
         Route::delete('/delete/{product}', [ProductController::class, 'destroy']);
@@ -34,6 +35,7 @@ Route::middleware(['auth:sanctum', 'permission:manage customers'])
     ->prefix('customers')
     ->group(function () {
         Route::get('/', [CustomerController::class, 'index']);
+        Route::get('/{customer}', [CustomerController::class, 'show']);
         Route::post('/store', [CustomerController::class, 'store']);
         Route::put('/update/{customer}', [CustomerController::class, 'update']);
         Route::delete('/delete/{customer}', [CustomerController::class, 'destroy']);
@@ -44,6 +46,7 @@ Route::middleware(['auth:sanctum', 'permission:manage sales'])->group(function (
 
     Route::prefix('sales')->group(function () {
         Route::get('/', [SaleController::class, 'index']);
+        Route::get('/{sale}', [SaleController::class, 'show']);
         Route::post('/store', [SaleController::class, 'store']);
         Route::post('/item/{sale}', [SaleController::class, 'addItem']);
         Route::post('/pay/{sale}', [SaleController::class, 'pay']);
@@ -57,6 +60,7 @@ Route::middleware(['auth:sanctum'])
     ->prefix('users')
     ->group(function () {
         Route::get('/', [UserController::class, 'index']);
+        Route::get('/{user}', [UserController::class, 'show']);
         Route::post('/store', [UserController::class, 'store']);
         Route::put('/update/{user}', [UserController::class, 'update']);
         Route::delete('/delete/{user}', [UserController::class, 'destroy']);

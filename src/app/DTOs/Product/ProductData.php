@@ -9,6 +9,7 @@ class ProductData
         public ?string $description,
         public float $price,
         public int $stockQuantity,
+        public ?string $category = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -18,6 +19,7 @@ class ProductData
             description: $data['description'] ?? null,
             price: $data['price'],
             stockQuantity: $data['stock_quantity'],
+            category: $data['category'] ?? null,
         );
     }
 }
