@@ -22,7 +22,7 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 const modalClasses = computed(() => {
-  const baseClasses = 'bg-white dark:bg-gray-800 rounded-base shadow-lg p-6 relative w-full'
+  const baseClasses = 'bg-white dark:bg-gray-800 rounded-base shadow-lg p-6 relative w-full max-h-[85vh] overflow-y-auto'
   
   const sizeClasses = {
     sm: 'max-w-sm',

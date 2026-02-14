@@ -5,7 +5,7 @@
       <h1 class="text-3xl font-bold text-neutral-700 dark:text-white">Vendas</h1>
       <div class="flex gap-2">
         <AtButton variant="primary" @click="openCreateModal">Nova Venda</AtButton>
-        <AtButton variant="secondary" @click="handleExportCSV">Exportar CSV</AtButton>
+        <AtButton variant="secondary" @click="openExportModal">Exportar PDF</AtButton>
       </div>
     </div>
     <CrudTable 
@@ -39,6 +39,12 @@
       @close="showViewModal = false"
       @updated="fetchSales"
     />
+    <ExportReportModal
+      v-if="showExportModal"
+      :show="showExportModal"
+      @close="showExportModal = false"
+      @sent="handleReportSent"
+    />
   </div>
 </template>
 
@@ -49,6 +55,7 @@ import AtButton from '../../components/atoms/Button.vue'
 import { ref, onMounted } from 'vue'
 import CreateSaleModal from './CreateSaleModal.vue'
 import ViewSaleModal from './ViewSaleModal.vue'
+import ExportReportModal from './ExportReportModal.vue'
 import api from '../../services/api'
 import { useToast } from 'vue-toastification'
 import Swal from 'sweetalert2'
@@ -63,6 +70,7 @@ const columns = [
 
 const rows = ref([])
 const showViewModal = ref(false)
+const showExportModal = ref(false)
 const selectedSaleId = ref(null)
 const toast = useToast()
 
@@ -96,20 +104,12 @@ function openCreateModal() {
   showCreateModal.value = true
 }
 
-function handleExportCSV() {
-  const csvRows = []
-  csvRows.push(columns.map(col => col.label).join(','))
-  rows.value.forEach(row => {
-    csvRows.push(columns.map(col => row[col.key]).join(','))
-  })
-  const csvString = csvRows.join('\n')
-  const blob = new Blob([csvString], { type: 'text/csv' })
-  const url = window.URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'vendas.csv'
-  a.click()
-  window.URL.revokeObjectURL(url)
+function openExportModal() {
+  showExportModal.value = true
+}
+
+function handleReportSent() {
+  toast.success('Relatorio em processamento. Voce recebera por email.')
 }
 
 function handleView(row) {
