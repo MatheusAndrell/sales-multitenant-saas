@@ -30,6 +30,7 @@ Este documento descreve as principais decisoes de arquitetura do projeto, com fo
 - `customers`
   - Clientes do tenant.
   - Dados basicos (nome, email, telefone, documento).
+  - Fornecedores foram modelados como customers, para simplificar o dominio.
 
 - `products`
   - Produtos do tenant.
@@ -47,6 +48,7 @@ Este documento descreve as principais decisoes de arquitetura do projeto, com fo
 ### Regras de negocio em transacoes
 - Finalizar venda (`pay`) e cancelar venda (`cancel`) usam transacoes com `lockForUpdate`.
 - Isso garante integridade de estoque em cenarios concorrentes.
+- O debito de estoque ocorre na finalizacao da venda (status `paid`) para manter vendas pendentes sem impacto em estoque.
 
 ## Roles e Permissions
 

@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum', 'permission:manage sales'])->group(function (
 });
 
 // Rotas de Usuários
-Route::middleware(['auth:sanctum'])
+Route::middleware(['auth:sanctum', 'permission:manage users'])
     ->prefix('users')
     ->group(function () {
         Route::get('/', [UserController::class, 'index']);
@@ -74,7 +74,7 @@ Route::middleware(['auth:sanctum'])
     });
 
 // Rotas de Relatórios
-Route::middleware(['auth:sanctum'])
+Route::middleware(['auth:sanctum', 'permission:view reports'])
     ->prefix('reports')
     ->group(function () {
         Route::post('/sales', [ReportController::class, 'getSalesReport']);
