@@ -12,9 +12,8 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        Permission::create(['name' => 'manage clients']);
-        Permission::create(['name' => 'manage products']);
         Permission::create(['name' => 'manage customers']);
+        Permission::create(['name' => 'manage products']);
         Permission::create(['name' => 'manage users']);
         Permission::create(['name' => 'manage sales']);
         Permission::create(['name' => 'view reports']);
@@ -23,6 +22,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin->givePermissionTo(Permission::all());
 
         $vendedor = Role::create(['name' => 'Vendedor']);
-        $vendedor->givePermissionTo(['manage clients', 'manage sales']);
+        $vendedor->givePermissionTo(['manage customers', 'manage sales']);
     }
 }

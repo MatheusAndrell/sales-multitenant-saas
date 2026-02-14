@@ -1,13 +1,8 @@
 <template>
   <section class="w-full h-full bg-gray-50 dark:bg-gray-900">
     <div class="flex flex-col items-center justify-center px-6 py-8 w-full h-full overflow-y-auto">
-      <Logo
-        src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-        alt="logo"
-        text="Sales SaaS"
-        :spacing="true"
-      />
-      
+         <AppLogo />
+
       <Card>
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-2">
           Create your account
@@ -50,6 +45,7 @@ import { useAuth } from '../../composables/useAuth'
 import Logo from '../atoms/Logo.vue'
 import Card from '../molecules/Card.vue'
 import RegisterForm from '../organisms/RegisterForm.vue'
+import AppLogo from '../atoms/AppLogo.vue'
 
 const router = useRouter()
 const { register } = useAuth()

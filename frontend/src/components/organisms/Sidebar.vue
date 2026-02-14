@@ -1,9 +1,11 @@
 <script setup>
+import { computed } from 'vue'
 import SidebarItem from '../molecules/SidebarItem.vue'
 import SidebarSection from '../molecules/SidebarSection.vue'
 import AppLogo from '../atoms/AppLogo.vue'
+import { useAuth } from '../../composables/useAuth'
 
-const menu = [
+const baseMenu = [
   {
     section: 'main',
     items: [
@@ -15,6 +17,28 @@ const menu = [
     ]
   },
 ]
+
+const { user } = useAuth()
+
+const isAdmin = computed(() => (user.value?.roles || []).includes('Admin da Loja'))
+const isSeller = computed(() => (user.value?.roles || []).includes('Vendedor'))
+
+const menu = computed(() => {
+  if (isAdmin.value) {
+    return baseMenu
+  }
+
+  if (isSeller.value) {
+    return [
+      {
+        section: 'main',
+        items: baseMenu[0].items.filter(item => ['Dashboard', 'Clientes', 'Vendas'].includes(item.label))
+      }
+    ]
+  }
+
+  return []
+})
 </script>
 
 <template>

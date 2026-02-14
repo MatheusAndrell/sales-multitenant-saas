@@ -1,7 +1,8 @@
 import { ref, computed } from 'vue'
 import api from '../services/api'
 
-const user = ref(null)
+const storedUser = localStorage.getItem('auth_user')
+const user = ref(storedUser ? JSON.parse(storedUser) : null)
 const token = ref(localStorage.getItem('auth_token') || null)
 
 const isAuthenticated = computed(() => !!token.value)
@@ -20,12 +21,17 @@ export function useAuth() {
         token.value = data.token
         localStorage.setItem('auth_token', data.token)
 
+        const roles = data.roles || data.user?.roles || []
+
         user.value = {
           id: data.user.id,
           email: data.user.email,
           name: data.user.name,
-          tenant_id: data.user.tenant_id
+          tenant_id: data.user.tenant_id,
+          roles
         }
+
+        localStorage.setItem('auth_user', JSON.stringify(user.value))
 
         return {
           success: true,
@@ -50,12 +56,17 @@ export function useAuth() {
         token.value = data.token
         localStorage.setItem('auth_token', data.token)
 
+        const roles = data.roles || data.user?.roles || []
+
         user.value = {
           id: data.user.id,
           email: data.user.email,
           name: data.user.name,
-          tenant_id: data.user.tenant_id
+          tenant_id: data.user.tenant_id,
+          roles
         }
+
+        localStorage.setItem('auth_user', JSON.stringify(user.value))
 
         return {
           success: true,
@@ -75,12 +86,23 @@ export function useAuth() {
     token.value = null
     user.value = null
     localStorage.removeItem('auth_token')
+    localStorage.removeItem('auth_user')
   }
 
   const checkAuth = () => {
     // Se há token em localStorage, a API pode validar na próxima requisição
     if (token.value) {
-      return true
+      const hasUser = !!user.value
+      const hasRoles = Array.isArray(user.value?.roles)
+      if (hasUser && hasRoles) {
+        return true
+      }
+
+      token.value = null
+      user.value = null
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('auth_user')
+      return false
     }
     return false
   }

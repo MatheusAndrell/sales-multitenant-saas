@@ -28,6 +28,7 @@ class TenantController extends Controller
                 'data' => [
                     'tenant' => $result['tenant'],
                     'user' => $result['user'],
+                    'roles' => $result['user']->getRoleNames(),
                     'token' => $result['token'],
                 ]
             ], 201);

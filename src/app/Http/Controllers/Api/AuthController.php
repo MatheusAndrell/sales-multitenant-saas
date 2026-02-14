@@ -27,6 +27,7 @@ class AuthController extends Controller
             'message' => 'Login realizado com sucesso',
             'data' => [
                 'user' => $user,
+                'roles' => $user->getRoleNames(),
                 'token' => $token,
             ],
         ], 200);

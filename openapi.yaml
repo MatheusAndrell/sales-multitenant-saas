@@ -1,0 +1,724 @@
+openapi: 3.0.3
+info:
+  title: Sales Multitenant SaaS API
+  version: 1.0.0
+  description: API para o sistema multitenant de vendas.
+servers:
+  - url: http://localhost:8000/api
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+    AuthLoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    AuthLoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            roles:
+              type: array
+              items:
+                type: string
+            token:
+              type: string
+    TenantRegisterRequest:
+      type: object
+      required: [tenant_name, tenant_email, cnpj, admin_name, admin_email, password]
+      properties:
+        tenant_name:
+          type: string
+        tenant_email:
+          type: string
+          format: email
+        cnpj:
+          type: string
+        admin_name:
+          type: string
+        admin_email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    TenantRegisterResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            tenant:
+              $ref: '#/components/schemas/Tenant'
+            user:
+              $ref: '#/components/schemas/User'
+            roles:
+              type: array
+              items:
+                type: string
+            token:
+              type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        tenant_id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+    Tenant:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        email:
+          type: string
+          format: email
+        cnpj:
+          type: string
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        tenant_id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        document:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        tenant_id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        stock_quantity:
+          type: integer
+        category:
+          type: string
+    Sale:
+      type: object
+      properties:
+        id:
+          type: integer
+        tenant_id:
+          type: integer
+        customer_id:
+          type: integer
+        total_amount:
+          type: number
+          format: float
+        status:
+          type: string
+          enum: [pending, paid, cancelled]
+        paid_at:
+          type: string
+          format: date-time
+    SaleItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        sale_id:
+          type: integer
+        product_id:
+          type: integer
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+        total_price:
+          type: number
+          format: float
+    CustomerStoreRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        document:
+          type: string
+    CustomerUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        document:
+          type: string
+    ProductStoreRequest:
+      type: object
+      required: [name, price, stock_quantity]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        stock_quantity:
+          type: integer
+        category:
+          type: string
+    ProductUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        stock_quantity:
+          type: integer
+        category:
+          type: string
+    SaleStoreRequest:
+      type: object
+      required: [customer_id]
+      properties:
+        customer_id:
+          type: integer
+    SaleAddItemRequest:
+      type: object
+      required: [product_id, quantity]
+      properties:
+        product_id:
+          type: integer
+        quantity:
+          type: integer
+          minimum: 1
+    UserStoreRequest:
+      type: object
+      required: [name, email, password, password_confirmation]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        password_confirmation:
+          type: string
+          format: password
+        role:
+          type: string
+          enum: ['Admin da Loja', 'Vendedor']
+    UserUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        password_confirmation:
+          type: string
+          format: password
+        role:
+          type: string
+          enum: ['Admin da Loja', 'Vendedor']
+    ReportRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [pending, paid, cancelled]
+        customer_id:
+          type: integer
+
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthLoginRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthLoginResponse'
+        '401':
+          description: Credenciais invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout
+      responses:
+        '200':
+          description: OK
+
+  /tenants/register:
+    post:
+      tags: [Tenant]
+      security: []
+      summary: Registrar tenant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRegisterRequest'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantRegisterResponse'
+
+  /products:
+    get:
+      tags: [Products]
+      summary: Listar produtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /products/{product}:
+    get:
+      tags: [Products]
+      summary: Detalhar produto
+      parameters:
+        - in: path
+          name: product
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  /products/store:
+    post:
+      tags: [Products]
+      summary: Criar produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductStoreRequest'
+      responses:
+        '201':
+          description: Criado
+  /products/update/{product}:
+    put:
+      tags: [Products]
+      summary: Atualizar produto
+      parameters:
+        - in: path
+          name: product
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateRequest'
+      responses:
+        '200':
+          description: OK
+  /products/delete/{product}:
+    delete:
+      tags: [Products]
+      summary: Remover produto
+      parameters:
+        - in: path
+          name: product
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+
+  /customers:
+    get:
+      tags: [Customers]
+      summary: Listar clientes
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+  /customers/{customer}:
+    get:
+      tags: [Customers]
+      summary: Detalhar cliente
+      parameters:
+        - in: path
+          name: customer
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+
+  /customers/store:
+    post:
+      tags: [Customers]
+      summary: Criar cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerStoreRequest'
+      responses:
+        '201':
+          description: Criado
+  /customers/update/{customer}:
+    put:
+      tags: [Customers]
+      summary: Atualizar cliente
+      parameters:
+        - in: path
+          name: customer
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdateRequest'
+      responses:
+        '200':
+          description: OK
+  /customers/delete/{customer}:
+    delete:
+      tags: [Customers]
+      summary: Remover cliente
+      parameters:
+        - in: path
+          name: customer
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+
+  /sales:
+    get:
+      tags: [Sales]
+      summary: Listar vendas
+      responses:
+        '200':
+          description: OK
+  /sales/{sale}:
+    get:
+      tags: [Sales]
+      summary: Detalhar venda
+      parameters:
+        - in: path
+          name: sale
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /sales/store:
+    post:
+      tags: [Sales]
+      summary: Criar venda
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaleStoreRequest'
+      responses:
+        '201':
+          description: Criado
+  /sales/item/{sale}:
+    post:
+      tags: [Sales]
+      summary: Adicionar item
+      parameters:
+        - in: path
+          name: sale
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaleAddItemRequest'
+      responses:
+        '201':
+          description: Criado
+  /sales/pay/{sale}:
+    post:
+      tags: [Sales]
+      summary: Finalizar venda
+      parameters:
+        - in: path
+          name: sale
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /sales/{sale}/items/{item}:
+    delete:
+      tags: [Sales]
+      summary: Remover item da venda
+      parameters:
+        - in: path
+          name: sale
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: item
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /sales/cancel/{sale}:
+    post:
+      tags: [Sales]
+      summary: Cancelar venda
+      parameters:
+        - in: path
+          name: sale
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+
+  /users:
+    get:
+      tags: [Users]
+      summary: Listar usuarios
+      responses:
+        '200':
+          description: OK
+  /users/{user}:
+    get:
+      tags: [Users]
+      summary: Detalhar usuario
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /users/store:
+    post:
+      tags: [Users]
+      summary: Criar usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStoreRequest'
+      responses:
+        '201':
+          description: Criado
+  /users/update/{user}:
+    put:
+      tags: [Users]
+      summary: Atualizar usuario
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: OK
+  /users/delete/{user}:
+    delete:
+      tags: [Users]
+      summary: Remover usuario
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+
+  /reports/sales:
+    post:
+      tags: [Reports]
+      summary: Gerar relatorio de vendas (sincrono)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '200':
+          description: OK
+  /reports/sales/email:
+    post:
+      tags: [Reports]
+      summary: Gerar relatorio de vendas (email/async)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '202':
+          description: Accepted
+
+  /dashboard/metrics:
+    get:
+      tags: [Dashboard]
+      summary: Metricas do dashboard
+      parameters:
+        - in: query
+          name: start_date
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end_date
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK

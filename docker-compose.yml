@@ -1,27 +1,53 @@
-version: '3.9'
-
 services:
   app:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+    image: sales_php:local
     container_name: sales_app
+    restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./src:/var/www
+    depends_on:
+      - mysql
+      - redis
+      - mailhog
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit((int)!@fsockopen('127.0.0.1', 9000));"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - sales_network
+
+  queue-worker:
+    image: sales_php:local
+    container_name: sales_queue_worker
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work --tries=3 --timeout=120
+    volumes:
+      - ./src:/var/www
+    depends_on:
+      - mysql
+      - redis
+      - mailhog
     networks:
       - sales_network
 
   nginx:
     image: nginx:alpine
     container_name: sales_nginx
+    restart: unless-stopped
     ports:
       - "8000:80"
     volumes:
       - ./src:/var/www
-      - ./docker/nginx:/etc/nginx/conf.d
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     networks:
       - sales_network
 
@@ -47,6 +73,15 @@ services:
     networks:
       - sales_network
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: sales_mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - sales_network
+
   frontend:
     build:
       context: .
@@ -55,6 +90,18 @@ services:
       - ./frontend:/app
     ports:
       - "5173:5173"
+    networks:
+      - sales_network
+
+  swagger:
+    image: swaggerapi/swagger-ui:v5.17.14
+    container_name: sales_swagger
+    environment:
+      - SWAGGER_JSON=/docs/openapi.yaml
+    volumes:
+      - ./openapi.yaml:/docs/openapi.yaml:ro
+    ports:
+      - "8080:8080"
     networks:
       - sales_network
 

@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TenantController;
@@ -20,15 +22,20 @@ Route::prefix('tenants')->group(function () {
 });
 
 // Rotas de Produtos
-Route::middleware(['auth:sanctum', 'permission:manage products'])
-    ->prefix('products')
-    ->group(function () {
-        Route::get('/', [ProductController::class, 'index']);
-        Route::get('/{product}', [ProductController::class, 'show']);
-        Route::post('/store', [ProductController::class, 'store']);
-        Route::put('/update/{product}', [ProductController::class, 'update']);
-        Route::delete('/delete/{product}', [ProductController::class, 'destroy']);
-    });
+Route::prefix('products')->group(function () {
+    Route::middleware(['auth:sanctum', 'permission:manage products|manage sales'])
+        ->group(function () {
+            Route::get('/', [ProductController::class, 'index']);
+            Route::get('/{product}', [ProductController::class, 'show']);
+        });
+
+    Route::middleware(['auth:sanctum', 'permission:manage products'])
+        ->group(function () {
+            Route::post('/store', [ProductController::class, 'store']);
+            Route::put('/update/{product}', [ProductController::class, 'update']);
+            Route::delete('/delete/{product}', [ProductController::class, 'destroy']);
+        });
+});
 
 // Rotas de Customers
 Route::middleware(['auth:sanctum', 'permission:manage customers'])
@@ -64,4 +71,19 @@ Route::middleware(['auth:sanctum'])
         Route::post('/store', [UserController::class, 'store']);
         Route::put('/update/{user}', [UserController::class, 'update']);
         Route::delete('/delete/{user}', [UserController::class, 'destroy']);
+    });
+
+// Rotas de Relatórios
+Route::middleware(['auth:sanctum'])
+    ->prefix('reports')
+    ->group(function () {
+        Route::post('/sales', [ReportController::class, 'getSalesReport']);
+        Route::post('/sales/email', [ReportController::class, 'emailSalesReport']);
+    });
+
+// Rotas de Dashboard
+Route::middleware(['auth:sanctum'])
+    ->prefix('dashboard')
+    ->group(function () {
+        Route::get('/metrics', [DashboardController::class, 'metrics']);
     });

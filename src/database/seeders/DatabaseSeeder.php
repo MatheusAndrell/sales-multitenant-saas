@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CreateTenantSeeder::class,
             RolesAndPermissionsSeeder::class,
             CreateAdminUsersSeeder::class,
+            TenantOneTestDataSeeder::class,
         ]);
     }
 }
